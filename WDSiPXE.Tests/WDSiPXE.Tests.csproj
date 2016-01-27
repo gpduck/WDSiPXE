@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeviceTemplateModuleTests.cs" />
+    <Compile Include="FakeDeviceRepository.cs" />
     <Compile Include="WDSDeviceRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
