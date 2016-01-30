@@ -1,26 +1,44 @@
 ﻿using System;
+using System.Configuration;
 using Nancy;
+using System.Collections.Specialized;
+using System.IO;
 
 namespace WDSiPXE
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
-        private String _remoteInstallPath;
-
-        public Bootstrapper() : this("c:\\temp30\\wds")
-        {
-
-        }
-
-        public Bootstrapper(String remoteInstallPath)
-        {
-            _remoteInstallPath = remoteInstallPath;
-        }
-
         protected override void ApplicationStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
         {
 
-            container.Register<IDeviceRepository, WDSDeviceRepository>(new WDSDeviceRepository(_remoteInstallPath));
+            NameValueCollection appSettings = ConfigurationManager.AppSettings;
+            switch (appSettings["DeviceRepository"]) {
+                case "WDS":
+                    WDSDeviceRepository wds = null;
+                    if (String.IsNullOrEmpty(appSettings["WDS.RemoteInstallPath"]))
+                    {
+                        wds = new WDSDeviceRepository();
+                        
+                    }
+                    else
+                    {
+                        string remoteInstallPath = appSettings["WDS.RemoteInstallPath"];
+                        if (!Path.IsPathRooted(remoteInstallPath))
+                        {
+                            //Resolve relative paths from application root.
+                            remoteInstallPath = Path.Combine(this.RootPathProvider.GetRootPath(), remoteInstallPath);
+                        }
+                        wds = new WDSDeviceRepository(remoteInstallPath);
+                    }
+                    container.Register<IDeviceRepository, WDSDeviceRepository>(wds);
+                    break;
+                case "AD":
+                    container.Register<IDeviceRepository, ADDeviceRepository>(new ADDeviceRepository());
+                    break;
+                default:
+                    throw new ConfigurationErrorsException("Please add a valid 'DeviceRepository' AppSetting value to the applications configuration file.");
+            }
+            
             base.ApplicationStartup(container, pipelines);
         }
     }

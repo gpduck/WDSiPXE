@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using IniParser;
 using IniParser.Model;
 using System.IO;
+using System.Configuration;
 
 namespace WDSiPXE
 {
@@ -17,26 +18,25 @@ namespace WDSiPXE
 
         public WDSDeviceRepository(String remoteInstallPath)
         {
-            this._path = remoteInstallPath;
+            this._path = Path.Combine(remoteInstallPath, "Stores", "wdssdc", "wdssdc.ini");
+            if (!File.Exists(this._path))
+            {
+                throw new FileNotFoundException("Unable to locate WDS store at " + this._path);
+            }
         }
 
         public static String GetRemoteInstallPath()
         {
             String keyPath = "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\WDSServer\\Providers\\WDSTFTP";
             String defaultValue = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\\RemoteInstall");
-            return (String)Registry.GetValue(keyPath, "RootFolder", defaultValue);
+            String registryValue = (String)Registry.GetValue(keyPath, "RootFolder", defaultValue) ?? defaultValue;
+            return registryValue;
         }
 
         public Device GetDeviceById(string id)
         {
-            String repositoryPath = System.IO.Path.Combine(_path, "Stores", "wdssdc", "wdssdc.ini");
-            if (!File.Exists(repositoryPath))
-            {
-                throw new FileNotFoundException("Unable to locate WDS repository", repositoryPath);
-            }
-
             FileIniDataParser parser = new FileIniDataParser();
-            IniData repository = parser.ReadFile(repositoryPath);
+            IniData repository = parser.ReadFile(this._path);
             try
             {
                 SectionData deviceSection = repository.Sections.First<SectionData>(s =>
