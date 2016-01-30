@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Nancy;
 
 namespace WDSiPXE
@@ -22,6 +19,7 @@ namespace WDSiPXE
 
         protected override void ApplicationStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
         {
+
             container.Register<IDeviceRepository, WDSDeviceRepository>(new WDSDeviceRepository(_remoteInstallPath));
             base.ApplicationStartup(container, pipelines);
         }
