@@ -1,0 +1,12 @@
+﻿<html>
+<head><title></title></head>
+<body>
+    <table>
+        <tr><td style="font-weight: bold;">@@ViewBag["BaseUrl"]</td><td>@ViewBag["BaseUrl"]</td></tr>
+        @foreach (var key in @Model.Keys)
+        {
+            <tr><td style="font-weight: bold;">@@Model["@key"]</td><td>@Model[key]</td></tr>
+        }
+    </table>
+</body>
+</html>

@@ -87,7 +87,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\ipxe.cshtml">
+    <None Include="Views\debug.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Web.config" />
