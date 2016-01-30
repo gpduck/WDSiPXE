@@ -17,6 +17,7 @@ namespace WDSiPXE.Tests
             Device d = new Device();
             String netbootGuid = this.TESTID;
             d.Add("netbootGuid", netbootGuid);
+            d.Add("templateName", "dynamictemplate");
             fdr.Devices.Add(netbootGuid, d);
             return fdr;
         }
@@ -48,6 +49,20 @@ namespace WDSiPXE.Tests
                 c.Query("Template", "baseurl");
             });
             Assert.AreEqual("http://localhost", response.Body.AsString());
+        }
+
+        [TestMethod]
+        public void TemplateProperty()
+        {
+            IDeviceRepository fdr = this.GetTestDeviceRepository();
+            DeviceTemplateModule module = new DeviceTemplateModule(fdr);
+            Browser browser = new Browser(with => with.Module(module));
+            BrowserResponse response = browser.Get("/DeviceTemplateModuleTests/" + this.TESTID, c =>
+            {
+                c.HostName("localhost");
+                c.Query("TemplateProperty", "templateName");
+            });
+            Assert.AreEqual("DynamicTemplateContent", response.Body.AsString());
         }
     }
 }
