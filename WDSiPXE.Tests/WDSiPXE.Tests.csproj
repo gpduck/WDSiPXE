@@ -81,7 +81,7 @@
     <Content Include="Views\DeviceTemplateModuleTests\netbootguid.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\ks\esx55boot.cshtml">
+    <Content Include="Views\DeviceTemplateModuleTests\baseurl.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

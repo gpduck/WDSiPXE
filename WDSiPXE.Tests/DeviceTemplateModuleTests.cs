@@ -10,23 +10,44 @@ namespace WDSiPXE.Tests
     [TestClass]
     public class DeviceTemplateModuleTests
     {
+        private string TESTID = "00-00-00-00-00-01";
+
+        private IDeviceRepository GetTestDeviceRepository() {
+            FakeDeviceRepository fdr = new FakeDeviceRepository();
+            Device d = new Device();
+            String netbootGuid = this.TESTID;
+            d.Add("netbootGuid", netbootGuid);
+            fdr.Devices.Add(netbootGuid, d);
+            return fdr;
+        }
+
         [TestMethod]
         public void GetDevicebyId()
         {
-            FakeDeviceRepository fdr = new FakeDeviceRepository();
-            Device d = new Device();
-            String netbootGuid = "00-00-00-00-00-01";
-            d.Add("netbootGuid", netbootGuid);
-            fdr.Devices.Add(netbootGuid, d);
+            IDeviceRepository fdr = this.GetTestDeviceRepository();
             DeviceTemplateModule module = new DeviceTemplateModule(fdr);
             Browser browser = new Browser(with => with.Module(module));
-            BrowserResponse response = browser.Get("/DeviceTemplateModuleTests/" + netbootGuid, c => {
+            BrowserResponse response = browser.Get("/DeviceTemplateModuleTests/" + this.TESTID, c => {
                 //c.Header("Accept", "text/plain");
                 c.HostName("localhost");
                 c.Query("Template", "netbootguid");
             });
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(response.Body.AsString(), netbootGuid);
+            Assert.AreEqual(this.TESTID, response.Body.AsString());
+        }
+
+        [TestMethod]
+        public void BaseUrl()
+        {
+            IDeviceRepository fdr = this.GetTestDeviceRepository();
+            DeviceTemplateModule module = new DeviceTemplateModule(fdr);
+            Browser browser = new Browser(with => with.Module(module));
+            BrowserResponse response = browser.Get("/DeviceTemplateModuleTests/" + this.TESTID, c =>
+            {
+                c.HostName("localhost");
+                c.Query("Template", "baseurl");
+            });
+            Assert.AreEqual("http://localhost", response.Body.AsString());
         }
     }
 }
