@@ -1,0 +1,9 @@
+﻿CREATE TABLE [ComputerIdentity](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [nvarchar](255) NULL,
+	[AssetTag] [nvarchar](255) NULL,
+	[UUID] [nvarchar](50) NULL,
+	[SerialNumber] [nvarchar](255) NULL,
+	[MacAddress] [nvarchar](50) NULL,
+	PRIMARY KEY (ID)
+);

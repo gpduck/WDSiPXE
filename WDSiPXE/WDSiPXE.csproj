@@ -99,6 +99,7 @@
     <Compile Include="IDeviceRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorConfig.cs" />
+    <Compile Include="MDTDeviceRepository.cs" />
     <Compile Include="WDSDeviceRepository.cs" />
   </ItemGroup>
   <ItemGroup />
