@@ -35,6 +35,9 @@ namespace WDSiPXE
                 case "AD":
                     container.Register<IDeviceRepository, ADDeviceRepository>(new ADDeviceRepository());
                     break;
+                case "MDT":
+                    container.Register<IDeviceRepository, MDTDeviceRepository>(new MDTDeviceRepository());
+                    break;
                 default:
                     throw new ConfigurationErrorsException("Please add a valid 'DeviceRepository' AppSetting value to the applications configuration file.");
             }
