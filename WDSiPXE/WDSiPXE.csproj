@@ -87,9 +87,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\debug.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="Views\debug.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +99,7 @@
     <Compile Include="IDeviceRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorConfig.cs" />
+    <Compile Include="MDTDeviceRepository.cs" />
     <Compile Include="WDSDeviceRepository.cs" />
   </ItemGroup>
   <ItemGroup />

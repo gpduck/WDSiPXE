@@ -1,28 +1,29 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.IO;
 using WDSiPXE;
 
 namespace WDSiPXE.Tests
 {
     [TestClass]
-    public class WDSDeviceRepositoryTests
+    public class WDSDeviceRepositoryTests : BaseDeviceRepository
     {
-        [TestMethod]
-        public void GetDeviceById()
+        protected override System.Collections.Generic.IList<System.Collections.Generic.KeyValuePair<string,object>> TestValues
         {
-            WDSDeviceRepository wds = new WDSDeviceRepository(Directory.GetCurrentDirectory());
-            Device d = wds.GetDeviceById("00-00-00-00-00-01");
-            Assert.AreEqual("test", d["WDS.Device.Name"]);
-            Assert.AreEqual("[00-00-00-00-00-01]", d["WDS.Device.ID"]);
+	        get {
+                return new List<KeyValuePair<String, Object>>(
+                    new KeyValuePair<String, Object>[] {
+                        new KeyValuePair<String, Object>("WDS.Device.Name", "test"),
+                        new KeyValuePair<String, Object>("WDS.Device.ID", "[00-00-00-00-00-01]")
+                    }
+                );
+            }
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(DeviceNotFoundException))]
-        public void DeviceIdDoesNotExist()
+        protected override IDeviceRepository GetRepository()
         {
-            WDSDeviceRepository wds = new WDSDeviceRepository(Directory.GetCurrentDirectory());
-            wds.GetDeviceById("234");
+            return new WDSDeviceRepository(Directory.GetCurrentDirectory());
         }
 
         [TestMethod]
