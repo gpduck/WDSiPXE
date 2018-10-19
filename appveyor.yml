@@ -1,0 +1,37 @@
+version: 0.5.0.{build}
+skip_tags: true
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- pwsh: dotnet restore
+build_script:
+- pwsh: dotnet publish --configuration Release
+artifacts:
+- path: 'WDSiPXE\bin\Release\netcoreapp2.1\publish'
+  name: 'WDSiPXE_$(appveyor_build_version)'
+  type: Zip
+test_script:
+- pwsh: dotnet test WDSiPXE.Tests
+deploy:
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: v$(appveyor_build_version)
+  auth_token:
+    secure: iu9hNAZgofNbkDcYtQ0YPIYUZNFZBcLAizMr8bf+Kxu7lg8RFB+x4JkU/L9pdOci
+  draft: true
+  on:
+    branch: master
+notifications:
+- provider: Slack
+  auth_token:
+    secure: oTMScuPr69Vr6kXjKwU0PmNsLshdRX4XVCgSp66envInkP7EjEpV9gJgxrLL6clZwFkL4defQHCjeuUlRfk3ZQ==
+  channel: '#wdsipxe'
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true

@@ -1,3 +1,3 @@
 ﻿dhcp
-kernel @(ViewBag.BaseUrl)media/esx/5.5/mboot.c32 -c @(ViewBag.BaseUrl)ks/@Model["ID"]?Template=ESX55BOOT
+kernel @(Model.BaseUrl)/media/esx/5.5/mboot.c32 -c @(Model.BaseUrl)/ks/@(Model.ID)?Template=ESX55BOOT
 boot

@@ -1,11 +1,36 @@
-﻿<html>
-<head><title></title></head>
+﻿@{ Context.Response.ContentType = "text/html"; }
+<html>
+<head>
+    <title></title>
+    <style>
+        .variableName {
+            font-weight: bold;
+            text-align: right;
+            vertical-align: top;
+        }
+        .variableIndex {
+            font-weight: bold;
+            position: absolute;
+        }
+        .variableValue {
+            padding-left: 40px;
+        }
+    </style>
+</head>
 <body>
     <table>
-        <tr><td style="font-weight: bold;">@@ViewBag["BaseUrl"]</td><td>@ViewBag["BaseUrl"]</td></tr>
-        @foreach (var key in @Model.Keys)
+        <tr><td class="variableName">@@Model.BaseUrl</td><td><span class="variableValue">@Model.BaseUrl</span></td></tr>
+        <tr><td class="variableName">@@Model.ID</td><td><span class="variableValue">@Model.ID</span></td></tr>
+        @foreach (var key in @Model.Device.Keys)
         {
-            <tr><td style="font-weight: bold;">@@Model["@key"]</td><td>@Model[key]</td></tr>
+            <tr>
+                <td class="variableName">@@Model.Device["@key"]</td>
+                <td>
+                    @for(var i = 0; i < @Model.Device[key].Count; i++) {
+                        @:<span class="variableIndex">[@i]</span><span class="variableValue">@Model.Device[key][i]</span> <br />
+                    }
+                </td>
+            </tr>
         }
     </table>
 </body>

@@ -1,0 +1,5 @@
+{
+  "WDS": {
+    "RemoteInstallPath": "testdata\\missingwds"
+  }
+}
