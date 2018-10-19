@@ -14,7 +14,7 @@ build_script:
 - pwsh: dotnet publish --configuration Release
 artifacts:
 - path: 'WDSiPXE\bin\Release\netcoreapp2.1\publish'
-  name: 'WDSiPXE_$(appveyor_build_version).zip'
+  name: 'WDSiPXE_$(appveyor_build_version)'
   type: Zip
 deploy:
 - provider: GitHub
