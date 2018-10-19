@@ -14,11 +14,34 @@ namespace WDSiPXE.Models
     {
         private ADDomainConfig[] _domains;
         private string[] _properties = new string[] { };
+        public static readonly string DEFAULT_FILTER = "(&(objectCategory=computer)(netbootGuid={0})(operatingSystemVersion=*)(dNSHostName=*))";
+        public static readonly string[] DEFAULT_PROPERTIES = new string[] { "name", "netbootGuid", "operatingSystemVersion", "dNSHostName" };
 
         public ADDeviceRepository(IConfiguration config) {
-            _domains = config.GetSection("AD:Domains").Get<ADDomainConfig[]>();
-            _properties = config.GetSection("AD:Properties").Get<string[]>();
+            _domains = config.GetSection("AD:Domains").Get<ADDomainConfig[]>() ?? new ADDomainConfig[0];
+            _properties = config.GetSection("AD:Properties").Get<string[]>() ?? DEFAULT_PROPERTIES;
             Console.WriteLine($"Searching properties {_properties.Length}");
+        }
+
+        public DirectorySearcher BuildDirectorySearcher(ADDomainConfig config, string NormalizedId) {
+            DirectorySearcher searcher;
+            if(String.IsNullOrEmpty(config.ConnectionString)) {
+                searcher = new DirectorySearcher();
+            } else {
+                searcher = new DirectorySearcher(new DirectoryEntry(config.ConnectionString));
+            }
+            if(!String.IsNullOrEmpty(config.SearchBase)) {
+                searcher.SearchRoot = new DirectoryEntry($"{searcher.SearchRoot.Path}/config.SearchBase");
+            }
+            if(String.IsNullOrEmpty(config.Filter)) {
+                searcher.Filter = String.Format(ADDeviceRepository.DEFAULT_FILTER, NormalizedId);
+            } else {
+                searcher.Filter = String.Format(config.Filter, NormalizedId);
+            }
+            if(_properties.Length > 0) {
+                searcher.PropertiesToLoad.AddRange(_properties);
+            }
+            return searcher;
         }
 
         public Device GetDeviceById(string id)
@@ -26,14 +49,8 @@ namespace WDSiPXE.Models
             Device device = null;
             String normalizedId = MacToNetbootGuid(id);
             foreach(ADDomainConfig domain in _domains) {
-                using(DirectorySearcher searcher = new DirectorySearcher()) {
-                    Console.WriteLine($"Connecting to {domain.ConnectionString}/{domain.SearchBase}");
-                    searcher.SearchRoot = new DirectoryEntry($"{domain.ConnectionString}/{domain.SearchBase}");
-                    searcher.Filter = String.Format(domain.Filter, normalizedId);
-                    if(_properties.Length > 0) {
-                        searcher.PropertiesToLoad.AddRange(_properties);
-                    }
-
+                using(DirectorySearcher searcher = BuildDirectorySearcher(domain, normalizedId)) {
+                    Console.WriteLine($"Searching AD Domain {searcher.SearchRoot.Path}");
                     SearchResult adComputer = searcher.FindOne();
                     if(adComputer != null) {
                         device = new Device();
