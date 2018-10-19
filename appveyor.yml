@@ -23,7 +23,7 @@ deploy:
   tag: v$(appveyor_build_version)
   release: v$(appveyor_build_version)
   auth_token:
-    secure: iu9hNAZgofNbkDcYtQ0YPIYUZNFZBcLAizMr8bf+Kxu7lg8RFB+x4JkU/L9pdOci
+    secure: UyN0Y3Ni1nI5zxeNk87qWqumzNzG8r/NndlAI20eZbPyh9Xd2bHFk5vwZT1HSAn3
   draft: true
   on:
     branch: master
