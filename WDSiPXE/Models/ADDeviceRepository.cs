@@ -31,7 +31,7 @@ namespace WDSiPXE.Models
                 searcher = new DirectorySearcher(new DirectoryEntry(config.ConnectionString));
             }
             if(!String.IsNullOrEmpty(config.SearchBase)) {
-                searcher.SearchRoot = new DirectoryEntry($"{searcher.SearchRoot.Path}/config.SearchBase");
+                searcher.SearchRoot = new DirectoryEntry($"{searcher.SearchRoot.Path}/{config.SearchBase}");
             }
             if(String.IsNullOrEmpty(config.Filter)) {
                 searcher.Filter = String.Format(ADDeviceRepository.DEFAULT_FILTER, NormalizedId);
