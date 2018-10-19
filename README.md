@@ -32,7 +32,13 @@ Download the latest Zip file from the releases page and extract to a web applica
 
 <dt>PropertyName</dt>
 <dd>The name of a property in the device repository that will have the value of the template name.  The device will be located by the <code>DeviceID</code>, then the template will be located by the device's <code>PropertyName</code> value. The template will be located at <code>/Views/{TemplateFolder}/{Device.PropertyName}.cshtml</code></dd>
+</dl>
 
+`http://example.com/debug/{DeviceID}`
+
+<dl>
+<dt>DeviceID</dt>
+<dd>The value used to locate the device in the repository. Generally the device's MAC address, but check the documentation for the provider you plan on using to see what key values are suppored.</dd>
 </dl>
 
 # Device Repositories
