@@ -41,7 +41,7 @@ namespace WDSiPXE
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration config)
         {
             if (env.IsDevelopment())
             {
@@ -53,7 +53,9 @@ namespace WDSiPXE
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if(config.GetValue<bool>("UseHttpsRedirection")) {
+                app.UseHttpsRedirection();
+            }
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
