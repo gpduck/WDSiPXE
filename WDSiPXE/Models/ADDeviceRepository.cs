@@ -18,7 +18,7 @@ namespace WDSiPXE.Models
         public static readonly string[] DEFAULT_PROPERTIES = new string[] { "name", "netbootGuid", "operatingSystemVersion", "dNSHostName" };
 
         public ADDeviceRepository(IConfiguration config) {
-            _domains = config.GetSection("AD:Domains").Get<ADDomainConfig[]>() ?? new ADDomainConfig[0];
+            _domains = config.GetSection("AD:Domains").Get<ADDomainConfig[]>() ?? new ADDomainConfig[] { new ADDomainConfig()};
             _properties = config.GetSection("AD:Properties").Get<string[]>() ?? DEFAULT_PROPERTIES;
             Console.WriteLine($"Searching properties {_properties.Length}");
         }
@@ -31,13 +31,14 @@ namespace WDSiPXE.Models
                 searcher = new DirectorySearcher(new DirectoryEntry(config.ConnectionString));
             }
             if(!String.IsNullOrEmpty(config.SearchBase)) {
-                searcher.SearchRoot = new DirectoryEntry($"{searcher.SearchRoot.Path}/config.SearchBase");
+                searcher.SearchRoot = new DirectoryEntry($"{searcher.SearchRoot.Path}/{config.SearchBase}");
             }
             if(String.IsNullOrEmpty(config.Filter)) {
                 searcher.Filter = String.Format(ADDeviceRepository.DEFAULT_FILTER, NormalizedId);
             } else {
                 searcher.Filter = String.Format(config.Filter, NormalizedId);
             }
+            Console.WriteLine($"Search filter is {searcher.Filter}");
             if(_properties.Length > 0) {
                 searcher.PropertiesToLoad.AddRange(_properties);
             }
