@@ -1,4 +1,5 @@
 using System;
+using System.DirectoryServices;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,7 +45,11 @@ namespace WDSiPXE.Controllers
               if(!device.ContainsKey(TemplateProperty)) {
                 return new UnprocessableEntityObjectResult($"The device did not contain a value for the TemplateProperty '{TemplateProperty}'");
               }
-              view += "/" + device[TemplateProperty];
+              if(device[TemplateProperty] is ResultPropertyValueCollection) {
+                view += "/" + ((ResultPropertyValueCollection)device[TemplateProperty])[0];
+              } else {
+                view += "/" + device[TemplateProperty];
+              }
             }
             view += ".cshtml";
             Response.ContentType = "text/plain";
@@ -52,9 +57,8 @@ namespace WDSiPXE.Controllers
           } catch (DeviceNotFoundException e) {
             return NotFound(e.Message);
           } catch (Exception e) {
-            View(new ErrorViewModel { ErrorMessage = e.Message });
+            return View(new ErrorViewModel { ErrorMessage = e.Message });
           }
-          return NotFound();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
