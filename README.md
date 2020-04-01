@@ -4,7 +4,9 @@ Current Status:
 WDSiPXE is a web application that generates customized answer files for OS builds over HTTP (in particular Linux and ESXi over [iPXE][iPXE]).  This is accomplished by merging templates with information from a device repository.  The currently supported device repositories are [WDS Standalone](#WDS) and [MDT Database](#MDT) ([Active Directory](#ActiveDirectory) support is planned).
 
 # Quick Start
-Download the latest Zip file from the releases page and extract to a web application in IIS.  The app pool needs to be running .Net 4.5 or above.
+
+1. Install the ASP.Net Core 2.1 Runtime Hosting Bundle from https://dotnet.microsoft.com/download/dotnet-core/2.1
+1. Download the latest Zip file from the releases page and extract to a web application in IIS.
 
 # Urls
 
@@ -17,11 +19,11 @@ Download the latest Zip file from the releases page and extract to a web applica
 <dt>DeviceID</dt>
 <dd>The value used to locate the device in the repository. Generally the device's MAC address, but check the documentation for the provider you plan on using to see what key values are suppored.</dd>
 
-<dt>TemplateName</dt>
-<dd>The name of the template file to merge for the device.  This file should be located at <code>/Views/{TemplateFolder}/{TemplateName}.cshtml</code></dd>
+<dt>Template</dt>
+<dd>The name of the template file to merge for the device.  This file should be located at <code>/Views/{TemplateFolder}/{Template}.cshtml</code></dd>
 </dl>
 
-`http://example.com/{TemplateFolder}/{DeviceID}?TemplateProperty={PropertyName}`
+`http://example.com/kickstart/001122334455?Template=rh8`
 
 <dl>
 <dt>TemplateFolder</dt>
@@ -30,11 +32,11 @@ Download the latest Zip file from the releases page and extract to a web applica
 <dt>DeviceID</dt>
 <dd>The value used to locate the device in the repository. Generally the device's MAC address, but check the documentation for the provider you plan on using to see what key values are suppored.</dd>
 
-<dt>PropertyName</dt>
-<dd>The name of a property in the device repository that will have the value of the template name.  The device will be located by the <code>DeviceID</code>, then the template will be located by the device's <code>PropertyName</code> value. The template will be located at <code>/Views/{TemplateFolder}/{Device.PropertyName}.cshtml</code></dd>
+<dt>TemplateProperty</dt>
+<dd>The name of a property in the device repository that will have the value of the template name.  The device will be located by the <code>DeviceID</code>, then the template will be located by the device's <code>TemplateProperty</code> value. The template file should be located at <code>/Views/{TemplateFolder}/{Device.TemplateProperty}.cshtml</code></dd>
 </dl>
 
-`http://example.com/debug/{DeviceID}`
+`http://example.com/kickstart/001122334455?TemplateProperty=OperatingSystemVersion`
 
 <dl>
 <dt>DeviceID</dt>
